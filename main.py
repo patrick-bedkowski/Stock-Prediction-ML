@@ -4,9 +4,11 @@ import datetime as dt
 from trainer import train_model, predict
 
 def run_program():
-    PREDICTION_DAYS = 60
+    # set parameters
+    PREDICTION_DAYS = 40
     COMPANY = str(input('Type company name to view its future stock prices: '))
     
+    # learning data for the ML algorithm
     start = dt.datetime(2012, 1, 1)
     end = dt.datetime.now()
 
