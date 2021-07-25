@@ -10,6 +10,7 @@ Project uses ML techniques to predict future values of stocks. In order to do th
 
 1. [Project Requirements](#project-requirements)
 2. [Run Application](#run-application)
+3. [Popular stock ticker symbols](#popular-stock-ticker-symbols)
 
 <br />
 
@@ -28,6 +29,74 @@ pip install -r requirements.txt
 To use the software, run the following command:
 
 ```
-python main.py <yahoo-finance-stock-name>
+python main.py <stock-ticker-symbol>
 ```
+
+<br />
+
+## Popular stock ticker symbols
+
+<br />
+
+<style>
+#ticker-symbols {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#ticker-symbols td, #ticker-symbols th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#ticker-symbols tr:nth-child(even){background-color: #e2e2f2;color:black;}
+#ticker-symbols tr:nth-child(odd){background-color: #c2c2df;color:black;}
+
+#ticker-symbols tr:hover {
+    background-color: #a2a2ff;
+    transition:0.75s;
+    color:black;
+}
+
+#ticker-symbols th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #9F8AFD;
+  color: white;
+  font-size:1.15em;
+}
+</style>
+
+<table id="ticker-symbols">
+  <tr>
+    <th>Company</th>
+    <th>Ticker Symbol</th>
+  </tr>
+  <tr>
+    <td>Microsoft Corporation</td>
+    <td>MSFT</td>
+  </tr>
+  <tr>
+    <td>Intel Corporation</td>
+    <td>INTC</td>
+  </tr>
+  <tr>
+    <td>Apple</td>
+    <td>AAPL</td>
+  </tr>
+  <tr>
+    <td>TESLA</td>
+    <td>TSLA</td>
+  </tr>
+  <tr>
+    <td>Alphabet (GOOGLE)</td>
+    <td>GOOG</td>
+  </tr>
+  <tr>
+    <td>NVIDIA Corporation</td>
+    <td>NVDA</td>
+  </tr>
+</table>
 
