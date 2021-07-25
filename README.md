@@ -38,36 +38,9 @@ python main.py <stock-ticker-symbol>
 
 <br />
 
-<style>
-#ticker-symbols {
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-#ticker-symbols td, #ticker-symbols th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-#ticker-symbols tr:nth-child(even){background-color: #e2e2f2;color:black;}
-#ticker-symbols tr:nth-child(odd){background-color: #c2c2df;color:black;}
-
-#ticker-symbols tr:hover {
-    background-color: #a2a2ff;
-    transition:0.75s;
-    color:black;
-}
-
-#ticker-symbols th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #9F8AFD;
-  color: white;
-  font-size:1.15em;
-}
-</style>
+<div>
+    <img src="example.svg" width="400" height="400" alt="css-in-readme">
+</div>
 
 <table id="ticker-symbols">
   <tr>
