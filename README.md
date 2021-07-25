@@ -38,11 +38,7 @@ python main.py <stock-ticker-symbol>
 
 <br />
 
-<div>
-    <img src="styles.svg" width="400" height="400" alt="css-in-readme">
-</div>
-
-<table id="ticker-symbols">
+<table id="ticker-symbols" align="center">
   <tr>
     <th>Company</th>
     <th>Ticker Symbol</th>
