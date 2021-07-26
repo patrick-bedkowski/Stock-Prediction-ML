@@ -1,6 +1,12 @@
 from typing import List
 import matplotlib.pyplot as plt
 
+def plot_validate(actual_prices, predicted_prices) -> None:
+    # plot
+    plt.plot(actual_prices, color="black")
+    plt.plot(predicted_prices, color="green")
+    plt.savefig('hello.png')
+
 def plot_stocks(x_values, predicted_now: List[int], COMPANY) -> None:
     """
     Plots predicted stock value with previous values.
