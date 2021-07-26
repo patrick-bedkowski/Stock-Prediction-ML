@@ -38,7 +38,7 @@ python main.py <stock-ticker-symbol>
 
 <br />
 
-<table id="ticker-symbols" align="center">
+<table id="ticker-symbols" align="left">
   <tr>
     <th>Company</th>
     <th>Ticker Symbol</th>

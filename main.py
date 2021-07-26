@@ -1,12 +1,24 @@
 import pandas_datareader as web
 import datetime as dt
+import sys
 
 from trainer import train_model, predict
+from plotter import plot_stocks
 
 def run_program():
+
+    # if additional arguments have been passed
+    if len(sys.argv) == 2:
+        # get stock ticker symbol
+        COMPANY = (sys.argv[1]).upper()
+    elif len(sys.argv) == 1:
+        COMPANY = str(input('Insert company stock ticker symbol: ')).upper()
+    else:
+        print('Invalid number of arguments have been passed.')
+        sys.exit()
+    
     # set parameters
     PREDICTION_DAYS = 40
-    COMPANY = str(input('Type company name to view its future stock prices: '))
     
     # learning data for the ML algorithm
     start = dt.datetime(2012, 1, 1)
@@ -15,8 +27,15 @@ def run_program():
     try:
         # get stock data
         data = web.DataReader(COMPANY, 'yahoo', start, end)
+
+        # train the model
         scaler, model = train_model(data, PREDICTION_DAYS, COMPANY)
-        predict(data, PREDICTION_DAYS, COMPANY, scaler, model)
+        
+        # predict future values using the previously built model
+        values_till_now, predicted_values = predict(data, PREDICTION_DAYS, COMPANY, scaler, model)
+
+        # plot stocks
+        plot_stocks(values_till_now, predicted_values, COMPANY)
     except Exception as s:
         print(s)
         print('Something went wrong')
