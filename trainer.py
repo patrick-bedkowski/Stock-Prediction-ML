@@ -3,7 +3,8 @@ import numpy as np
 import pandas as pd
 import pandas_datareader as web
 import datetime as dt
-from typing import List
+
+from plotter import plot_validate
 
 # ML
 from sklearn.preprocessing import MinMaxScaler
@@ -29,8 +30,8 @@ def train_model(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str) -> None:
     x_train = []
     y_train = []
 
-    for x in range(PREDICTION_DAYS, len(scaled_data)):
-        x_train.append(scaled_data[x-PREDICTION_DAYS:x, 0])
+    for x in range(2*PREDICTION_DAYS, len(scaled_data)):
+        x_train.append(scaled_data[x-2*PREDICTION_DAYS:x, 0])
         y_train.append(scaled_data[x, 0])
 
     x_train, y_train = np.array(x_train), np.array(y_train)
@@ -39,29 +40,29 @@ def train_model(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str) -> None:
     # build the model
     model = Sequential()
 
-    model.add(LSTM(units = 50, return_sequences = True, input_shape = (x_train.shape[1], 1)))
+    # units - 50
+    model.add(LSTM(units = 40, return_sequences = True, input_shape = (x_train.shape[1], 1)))
     model.add(Dropout(0.2))
-    model.add(LSTM(units = 50, return_sequences = True))
+    model.add(LSTM(units = 40, return_sequences = True))
     model.add(Dropout(0.2))
-    model.add(LSTM(units = 50))
+    model.add(LSTM(units = 40))
     model.add(Dropout(0.2))
     model.add(Dense(units = 1)) # prediction of the next closing price
 
     # compile model
     model.compile(optimizer = 'adam', loss = 'mean_squared_error')
-    model.fit(x_train, y_train, epochs = 25, batch_size = 32)
+    model.fit(x_train, y_train, epochs = 25, batch_size = 25)
 
-    # model.save('FB', include_optimizer=True)
+    # model.save(f'{COMPANY}_{PREDICTION_DAYS}', include_optimizer=True)
     return scaler, model
-  
 
-def predict(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
+def predict(PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
 
     # load the model from disk
     # model = load_model('FB')
 
     # load data from {PREDICTION_DAYS} before
-    test_start = dt.datetime.now() - dt.timedelta(3*PREDICTION_DAYS)
+    test_start = dt.datetime.now() - dt.timedelta(5*PREDICTION_DAYS)
     test_end = dt.datetime.now()
     print('Timeframe: ', test_start, test_end)
 
@@ -77,10 +78,10 @@ def predict(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str, scaler, model) 
 
     predicted_values = []
 
-    for x in range(0, PREDICTION_DAYS):
+    for x in list(range(0, PREDICTION_DAYS))[::-1]:
 
         # list of values before the predicted one
-        data = [model_inputs[len(model_inputs) + x - PREDICTION_DAYS:len(model_inputs) + x, 0]]
+        data = [model_inputs[len(model_inputs) - x - 2*PREDICTION_DAYS:len(model_inputs) - x, 0]]
 
         # format
         data = np.array(data)
@@ -91,12 +92,12 @@ def predict(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str, scaler, model) 
         predicted_prices = scaler.inverse_transform(predicted_prices)
 
         # append predicted price to the value list
-        model_values = np.append(model_values, predicted_prices)
+        ##model_values = np.append(model_values, predicted_prices)
         predicted_values.append(predicted_prices)
 
         # update model inputs
-        model_inputs = model_values.reshape(-1, 1)
-        model_inputs = scaler.transform(model_inputs)
+        ##model_inputs = model_values.reshape(-1, 1)
+        ##model_inputs = scaler.transform(model_inputs)
     
     #x_test = np.array(x_test)
     #x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
@@ -121,3 +122,30 @@ def predict(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str, scaler, model) 
     # plot_stocks(stocks_till_now, int(prediction), COMPANY)
     
     return values_till_now, predicted_values
+
+
+def validate(data, PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
+    test_start = dt.datetime(2020,1,1)
+    test_end = dt.datetime.now()
+
+    test_data = web.DataReader(COMPANY, 'yahoo', test_start, test_end)
+    actual_prices = test_data['Close'].values
+
+    total_dataset = pd.concat((data['Close'], test_data['Close']), axis=0)
+
+    model_inputs = total_dataset[len(total_dataset) - len(test_data) - PREDICTION_DAYS:].values
+    model_inputs = model_inputs.reshape(-1, 1)
+    model_inputs = scaler.transform(model_inputs)
+
+    x_test = []
+
+    for x in range(2*PREDICTION_DAYS, len(model_inputs)):
+        x_test.append(model_inputs[x - 2*PREDICTION_DAYS:x, 0])
+
+    x_test = np.array(x_test)
+    x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+
+    predicted_prices = model.predict(x_test)
+    predicted_prices = scaler.inverse_transform(predicted_prices)
+
+    plot_validate(actual_prices, predicted_prices)

@@ -2,7 +2,7 @@ import pandas_datareader as web
 import datetime as dt
 import sys
 
-from trainer import train_model, predict
+from trainer import train_model, predict, validate
 from plotter import plot_stocks
 
 def run_program():
@@ -18,11 +18,11 @@ def run_program():
         sys.exit()
     
     # set parameters
-    PREDICTION_DAYS = 40
+    PREDICTION_DAYS = 30
     
     # learning data for the ML algorithm
     start = dt.datetime(2012, 1, 1)
-    end = dt.datetime.now()
+    end = dt.datetime(2020, 1, 1)
 
     try:
         # get stock data
@@ -31,8 +31,11 @@ def run_program():
         # train the model
         scaler, model = train_model(data, PREDICTION_DAYS, COMPANY)
         
+        # useful to validate the data
+        # validate(data, PREDICTION_DAYS, COMPANY, scaler, model)
+        
         # predict future values using the previously built model
-        values_till_now, predicted_values = predict(data, PREDICTION_DAYS, COMPANY, scaler, model)
+        values_till_now, predicted_values = predict(PREDICTION_DAYS, COMPANY, scaler, model)
 
         # plot stocks
         plot_stocks(values_till_now, predicted_values, COMPANY)
