@@ -1,6 +1,6 @@
 # Stock Prediction App
 
-<b><h2>This project is not meant to be used as an investment tool.</h2></b>
+<b><h3 style="font-size: 20px">This project is not meant to be used as an investment tool.</h3></b>
 
 Project uses ML techniques to predict future values of stocks. In order to do this, it involves LSTM Network Architecture and data from <i>Yahoo Finance API</i>.
 
@@ -12,6 +12,7 @@ Project uses ML techniques to predict future values of stocks. In order to do th
 2. [Run Application](#run-application)
 3. [Popular stock ticker symbols](#popular-stock-ticker-symbols)
 4. [Insights overview](#insights-overview)
+5. [Example Plot](#example-plot)
 
 <br />
 
@@ -139,3 +140,13 @@ demand</b>. Without a doubt we can see that the covid-19 pandemic affected many 
 Companies whose profits are based on production of such technologies experienced increase of its stocks value. <br />
 Events like this might introduce some misstatements into the prediction model.
 </p>
+
+<br /> 
+
+## Example Plot
+
+Image shows <i>General Motors</i> stocks predition 30 days into the future.
+
+<div align="center">
+<img alt="tesla_example" src="images/stock_GM.png"/>
+</div>
