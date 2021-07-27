@@ -148,5 +148,5 @@ Events like this might introduce some misstatements into the prediction model.
 Image shows <i>General Motors</i> stocks predition 30 days into the future.
 
 <div align="center">
-<img alt="tesla_example" src="images/stock_GM.png"/>
+<img alt="stock_GM_27_07_2021" src="images/stock_GM_27_07_2021.png"/>
 </div>
