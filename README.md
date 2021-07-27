@@ -96,15 +96,15 @@ Of course there are many more reasons why this stock validation was false (e.g. 
 <br />
 
 <p>
-On the other hand, there are companies that experience increase in some periods. E.g Apple as a big tech company releases new products mostly at the same time intervals (e.g. )
+On the other hand, there are companies that experience increase in some repeatable periods. E.g Apple as a big tech company releases new products mostly at the same time intervals (e.g. )
 
 <table id="ticker-symbols" align="center">
   <tr>
-    <th>iPhone 13 (predicted)</th>
-    <th>September 7 / 14, 2021</th>
+    <th>Models</th>
+    <th>Release date</th>
   </tr>
   <tr>
-    <td>iPhone 12 + 12 Pro</td>
+    <td>iPhone 12 series</td>
     <td>October 13, 2020</td>
   </tr>
   <tr>
@@ -122,10 +122,10 @@ On the other hand, there are companies that experience increase in some periods.
 </table>
 
 <br />
+<p>
+It might be the reason why the predicted validation of the past year's data came out well enough.
 
-It might be the reason why the predicted validation of the past year's data came out well enough.<br /><br />
-
-</p>
+</p> <br />
 
 <div align="center">
 <img alt="tesla_example" src="images/apple_example.png" width="75%"/>
@@ -135,7 +135,7 @@ It might be the reason why the predicted validation of the past year's data came
 <p>
 
 Another common factor that leads this model to false predictions, is the lack of the ability to predict <b>future 
-demand</b>. Without a doubt we can see that the covid-19 pandemic affected many sectors of technology industry. One of the effects of the pandemic was increased demand on technology hardware that caused <a href="https://en.wikipedia.org/wiki/2020–21_global_chip_shortage" target="_blank">Global Chip Shortage of 2020-21</a>. 
-Companies whose profits are based on production of such technologies experienced increased in its stocks value. <br />
+demand</b>. Without a doubt we can see that the covid-19 pandemic affected many sectors of technology industry. One of the effects of the pandemic was an increased demand on technology hardware that caused <a href="https://en.wikipedia.org/wiki/2020–21_global_chip_shortage" target="_blank">Global Chip Shortage of 2020-21</a>. 
+Companies whose profits are based on production of such technologies experienced increase of its stocks value. <br />
 Events like this might introduce some misstatements into the prediction model.
 </p>

@@ -36,6 +36,8 @@ def train_model(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str) -> None:
 
     x_train, y_train = np.array(x_train), np.array(y_train)
     x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+
+    return scaler # , model
     
     # build the model
     model = Sequential()
@@ -53,13 +55,13 @@ def train_model(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str) -> None:
     model.compile(optimizer = 'adam', loss = 'mean_squared_error')
     model.fit(x_train, y_train, epochs = 25, batch_size = 25)
 
-    # model.save(f'{COMPANY}_{PREDICTION_DAYS}', include_optimizer=True)
-    return scaler, model
+    model.save(f'model', include_optimizer=True)  # {COMPANY}_{PREDICTION_DAYS}
+    
 
-def predict(PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
+def predict(PREDICTION_DAYS: int, COMPANY: str, scaler) -> None:
 
     # load the model from disk
-    # model = load_model('FB')
+    model = load_model('model')
 
     # load data from {PREDICTION_DAYS} before
     test_start = dt.datetime.now() - dt.timedelta(5*PREDICTION_DAYS)
@@ -67,9 +69,15 @@ def predict(PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
     print('Timeframe: ', test_start, test_end)
 
     test_data = web.DataReader(COMPANY, 'yahoo', test_start, test_end)
+
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+        print(test_data['Close'])
     
     # get values from previous stocks
     model_values = test_data['Close'].values
+    
+    # save date time of the values, convert them to string
+    model_values_date = test_data.index.strftime('%d-%m-%Y').tolist()
 
     values_till_now = model_values
 
@@ -93,7 +101,7 @@ def predict(PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
 
         # append predicted price to the value list
         ##model_values = np.append(model_values, predicted_prices)
-        predicted_values.append(predicted_prices)
+        predicted_values.append(predicted_prices.item(0))
 
         # update model inputs
         ##model_inputs = model_values.reshape(-1, 1)
@@ -121,7 +129,7 @@ def predict(PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
 
     # plot_stocks(stocks_till_now, int(prediction), COMPANY)
     
-    return values_till_now, predicted_values
+    return values_till_now, predicted_values, model_values_date
 
 
 def validate(data, PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:

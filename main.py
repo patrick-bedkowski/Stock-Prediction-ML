@@ -29,16 +29,16 @@ def run_program():
         data = web.DataReader(COMPANY, 'yahoo', start, end)
 
         # train the model
-        scaler, model = train_model(data, PREDICTION_DAYS, COMPANY)
+        scaler = train_model(data, PREDICTION_DAYS, COMPANY) # , model
         
         # useful to validate the data
         # validate(data, PREDICTION_DAYS, COMPANY, scaler, model)
         
         # predict future values using the previously built model
-        values_till_now, predicted_values = predict(PREDICTION_DAYS, COMPANY, scaler, model)
+        values_till_now, predicted_values, model_values_date = predict(PREDICTION_DAYS, COMPANY, scaler) # , model
 
         # plot stocks
-        plot_stocks(values_till_now, predicted_values, COMPANY)
+        plot_stocks(values_till_now, predicted_values, model_values_date, COMPANY, PREDICTION_DAYS)
     except Exception as s:
         print(s)
         print('Something went wrong')
