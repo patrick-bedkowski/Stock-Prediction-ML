@@ -36,8 +36,6 @@ def train_model(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str) -> None:
 
     x_train, y_train = np.array(x_train), np.array(y_train)
     x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
-
-    return scaler # , model
     
     # build the model
     model = Sequential()
@@ -56,12 +54,14 @@ def train_model(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str) -> None:
     model.fit(x_train, y_train, epochs = 25, batch_size = 25)
 
     model.save(f'model', include_optimizer=True)  # {COMPANY}_{PREDICTION_DAYS}
+
+    return scaler, model
     
 
-def predict(PREDICTION_DAYS: int, COMPANY: str, scaler) -> None:
+def predict(PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
 
     # load the model from disk
-    model = load_model('model')
+    # model = load_model('model')
 
     # load data from {PREDICTION_DAYS} before
     test_start = dt.datetime.now() - dt.timedelta(5*PREDICTION_DAYS)
@@ -69,9 +69,6 @@ def predict(PREDICTION_DAYS: int, COMPANY: str, scaler) -> None:
     print('Timeframe: ', test_start, test_end)
 
     test_data = web.DataReader(COMPANY, 'yahoo', test_start, test_end)
-
-    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
-        print(test_data['Close'])
     
     # get values from previous stocks
     model_values = test_data['Close'].values

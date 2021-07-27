@@ -48,8 +48,9 @@ def plot_stocks(x_values, predicted_now: List[int], model_values_date, COMPANY, 
     # find min max value of stocks
     max_y = math.ceil(max(merged_x_data))
     min_y = math.floor(min(merged_x_data))
+    Y_TICS = int((max_y - min_y)/25)
     # set ytics
-    ax.set_yticks(np.arange(min_y-0.5, max_y+1, 0.5))
+    ax.set_yticks(np.arange(min_y-0.5, max_y+1, Y_TICS))
 
     # set xtics 
     x_tics = np.arange(0, len(x_values)+len(predicted_now)+1, step=10)
@@ -85,7 +86,7 @@ def plot_stocks(x_values, predicted_now: List[int], model_values_date, COMPANY, 
     # append predicted labels
     x_labels.extend(predicted_labels)
     
-    # set xtics labels to the days
+    # set xtics labels to the days | LABELS TO DAYS
     labels_previous = list(range(-(len(x_values)-1), -9, 10))
     labels_predicted = [d1] + list(range(10, len(predicted_now)+1, 10))
 
@@ -93,7 +94,7 @@ def plot_stocks(x_values, predicted_now: List[int], model_values_date, COMPANY, 
     ax.set_xticklabels(x_labels)
     
     # rotate x labels
-    plt.xticks(rotation=10)
+    plt.xticks(rotation=12.5)
 
     # set x, y labels padding 
     ax.tick_params(axis='x', which='major', pad=15)
