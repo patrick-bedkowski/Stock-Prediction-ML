@@ -18,6 +18,8 @@ Project uses ML techniques to predict future values of stocks. In order to do th
 
 ## Project Requirements
 
+<br />
+
 The following software requires following modules to be installed. Please see <b><i>requirements.txt</i></b>, or install all modules using the command:
 
 ```
