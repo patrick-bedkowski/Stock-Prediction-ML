@@ -165,4 +165,4 @@ def validate(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str, scaler, model)
     predicted_prices = model.predict(x_test)
     predicted_prices = scaler.inverse_transform(predicted_prices)
 
-    plot_validate(actual_prices, predicted_prices)
+    plot_validate(actual_prices, predicted_prices, COMPANY)

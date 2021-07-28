@@ -8,11 +8,11 @@ from pandas import Timestamp
 import pandas as pd
 from tensorflow.python.keras.backend import dtype_numpy
 
-def plot_validate(actual_prices, predicted_prices) -> None:
+def plot_validate(actual_prices, predicted_prices, COMPANY) -> None:
     # plot
-    plt.plot(actual_prices, color="black")
-    plt.plot(predicted_prices, color="green")
-    plt.savefig('hello.png')
+    plt.plot(actual_prices, color='#8DB0C7', label="Real data")
+    plt.plot(predicted_prices, color='#FFB93A', label="Predicted data")
+    plt.savefig('{COMPANY}_validation.png')
 
 def plot_stocks(x_values, predicted_now: List[int], model_values_date, COMPANY, PREDICTION_DAYS) -> None:
     """
