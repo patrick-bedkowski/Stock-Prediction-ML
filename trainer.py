@@ -59,36 +59,52 @@ def train_model(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str) -> None:
     
 
 def predict(PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
+    """
+    Parameters:
+        PREDICTION_DAYS: days to look previously,
+            before choosing what the value is of the next day
+        COMPANY: name of the company
+        scaler: scaler from ML algorithm
+        model: ML model of the reviewed company
+    Operations:
+        Function predicts stock value of specific company
+        number of days into the future. 
+    Returns:
+        None
+    """
 
-    # load the model from disk
+    # load saved the model from disk
     # model = load_model('model')
 
-    # load data from {PREDICTION_DAYS} before
+    # load previous stock data to feed the model
     test_start = dt.datetime.now() - dt.timedelta(5*PREDICTION_DAYS)
     test_end = dt.datetime.now()
+
     print('Timeframe: ', test_start, test_end)
 
     test_data = web.DataReader(COMPANY, 'yahoo', test_start, test_end)
     
     # get values from previous stocks
     model_values = test_data['Close'].values
-    
     # save date time of the values, convert them to string
     model_values_date = test_data.index.strftime('%d-%m-%Y').tolist()
 
     values_till_now = model_values
 
+    # reshape data
     model_inputs = model_values.reshape(-1, 1)
     model_inputs = scaler.transform(model_inputs)
 
     predicted_values = []
 
+    # iterate through list
     for x in list(range(0, PREDICTION_DAYS))[::-1]:
 
-        # list of values before the predicted one
+        # data that is fed into a model
+        # list of values days before the predicted one
         data = [model_inputs[len(model_inputs) - x - 2*PREDICTION_DAYS:len(model_inputs) - x, 0]]
 
-        # format
+        # format data
         data = np.array(data)
         data = np.reshape(data, (data.shape[0], data.shape[1], 1))
 
@@ -100,36 +116,32 @@ def predict(PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
         ##model_values = np.append(model_values, predicted_prices)
         predicted_values.append(predicted_prices.item(0))
 
+        # this part was an early concept that assumed feeding
+        # the predicted values into a model to predict another value
+        # but inserting false data could influence the output significantly
+
         # update model inputs
         ##model_inputs = model_values.reshape(-1, 1)
         ##model_inputs = scaler.transform(model_inputs)
     
-    #x_test = np.array(x_test)
-    #x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
-
-    #predicted_prices = model.predict(x_test)
-    #predicted_prices = scaler.inverse_transform(predicted_prices)
-
-    #print(f'PREDICTED: {predicted_prices}')
-
-    # # Predict next days data
-    """real_data = [model_inputs[len(model_inputs) + 1 - PREDICTION_DAYS: len(model_inputs) + 1, 0]]
-    real_data = np.array(real_data)
-    real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1], 1))
-
-    stocks_till_now = scaler.inverse_transform(real_data[-1])
-
-    prediction = model.predict(real_data)
-    prediction = scaler.inverse_transform(prediction)
-    
-    print(f"Predicted closing price for tomorrow: {int(prediction)}")"""
-
-    # plot_stocks(stocks_till_now, int(prediction), COMPANY)
-    
     return values_till_now, predicted_values, model_values_date
 
 
-def validate(data, PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
+def validate(data: DataFrame, PREDICTION_DAYS: int, COMPANY: str, scaler, model) -> None:
+    """
+    Parameters:
+        data: datareader of stocks
+        PREDICTION_DAYS: days to look previously,
+            before choosing what the value is of the next day
+        COMPANY: name of the company
+        scaler: scaler from ML algorithm
+        model: ML model of the reviewed company
+    Operations:
+        Function validates the correctness of the model by comparing
+        predicted data and real data from the past
+    Returns:
+        None
+    """
     test_start = dt.datetime(2020,1,1)
     test_end = dt.datetime.now()
 
