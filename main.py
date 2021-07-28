@@ -31,7 +31,7 @@ def run_program():
         # train the model
         scaler, model = train_model(data, PREDICTION_DAYS, COMPANY) # , model
         
-        # useful to validate the data
+        # useful to validate the model
         # validate(data, PREDICTION_DAYS, COMPANY, scaler, model)
         
         # predict future values using the previously built model
@@ -39,9 +39,8 @@ def run_program():
 
         # plot stocks
         plot_stocks(values_till_now, predicted_values, model_values_date, COMPANY, PREDICTION_DAYS)
-    except Exception as s:
-        print(s)
-        print('Something went wrong')
+    except Exception as exc:
+        print('Something went wrong', exc)
         while True:
             response = input('Do you want to insert company name again? (n/y): ')
             if response == 'y':
