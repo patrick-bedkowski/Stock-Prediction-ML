@@ -18,11 +18,11 @@ def plot_stocks(x_values, predicted_now: List[int], model_values_date, COMPANY, 
     """
     Plots predicted stock value with previous values.
     """
+    x_values = x_values.flatten()
     x_values = x_values.tolist()
 
     # modify the values so the predicted ones are exactly 1/3 of (x_values+1)
     x_values = x_values[13:]
-
     model_values_date = model_values_date[13:len(model_values_date)-10]
 
     # create fig
@@ -43,13 +43,14 @@ def plot_stocks(x_values, predicted_now: List[int], model_values_date, COMPANY, 
     ax.legend()
     plt.legend(loc=2, prop={'size': 16})
 
-    merged_x_data = list(x_values + predicted_now)
+    merged_x_data = list(x_values) + list(predicted_now)
 
     # find min max value of stocks
     max_y = math.ceil(max(merged_x_data))
     min_y = math.floor(min(merged_x_data))
-    Y_TICS = int((max_y - min_y)/25)
+    Y_TICS = float((max_y - min_y)/25)
     # set ytics
+    print(min_y-0.5, max_y+1, Y_TICS)
     ax.set_yticks(np.arange(min_y-0.5, max_y+1, Y_TICS))
 
     # set xtics 

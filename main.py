@@ -1,56 +1,57 @@
 import pandas_datareader as web
 import datetime as dt
+import os
 import sys
-
-from trainer import train_model, predict, validate
+import yfinance as yf
+from trainer import train_model, predict, load_existing_model
 from plotter import plot_stocks
 
-def run_program():
-
-    # if additional arguments have been passed
-    if len(sys.argv) == 2:
-        # get stock ticker symbol
-        COMPANY = (sys.argv[1]).upper()
-    elif len(sys.argv) == 1:
-        COMPANY = str(input('Insert company stock ticker symbol: ')).upper()
-    else:
-        print('Invalid number of arguments have been passed.')
-        sys.exit()
-    
-    # set parameters
-    PREDICTION_DAYS = 30
-    
-    # learning data for the ML algorithm
-    start = dt.datetime(2012, 1, 1)
-    end = dt.datetime(2020, 1, 1)
-
+def fetch_stock_data(ticker, start_date, end_date):
     try:
-        # get stock data
-        data = web.DataReader(COMPANY, 'yahoo', start, end)
+        stock = yf.Ticker(ticker)
+        data = stock.history(start=start_date, end=end_date)
 
-        # train the model
-        scaler, model = train_model(data, PREDICTION_DAYS, COMPANY) # , model
-        
-        # useful to validate the model
-        # validate(data, PREDICTION_DAYS, COMPANY, scaler, model)
-        
-        # predict future values using the previously built model
-        values_till_now, predicted_values, model_values_date = predict(PREDICTION_DAYS, COMPANY, scaler, model) # , model
+        # Check if data is empty
+        if data.empty:
+            print(f"Warning: No data returned for {ticker}. Check the ticker symbol or try again later.")
+            return None
 
-        # plot stocks
-        plot_stocks(values_till_now, predicted_values, model_values_date, COMPANY, PREDICTION_DAYS)
-    except Exception as exc:
-        print('Something went wrong', exc)
-        while True:
-            response = input('Do you want to insert company name again? (n/y): ')
-            if response == 'y':
-                run_program()
-                break
-            elif response == 'n':
-                print('Goodbye!')
-                break
-            else:
-                print('Please insert proper option')
+        print(f"Successfully fetched data for {ticker}")
+        return data
+
+    except Exception as e:
+        print(f"Error fetching data for {ticker}: {e}")
+        return None
+
+def run_program():
+    COMPANY = "TSLA"
+    PREDICTION_DAYS = 10
+    EPOCHS = 10
+
+    # 🔥 New Variable: Load Model from Checkpoint
+    LOAD_FROM_CHECKPOINT = False  # Change to False to retrain model
+
+    start = dt.datetime(2024, 6, 1)
+    end = dt.datetime(2025, 3, 3)
+
+    data = fetch_stock_data(COMPANY, start, end)
+    if data is None:
+        print("No stock data available. Exiting...")
+        return
+
+    # 🔥 Load model from checkpoint or train a new one
+    if LOAD_FROM_CHECKPOINT and os.path.exists(f'model_{EPOCHS}.h5'):
+        print("✅ Loading model from checkpoint...")
+        scaler, model = load_existing_model(EPOCHS)
+    else:
+        print("🚀 Training a new model...")
+        scaler, model = train_model(data, PREDICTION_DAYS, COMPANY, EPOCHS)
+
+    # Predict future values
+    values_till_now, predicted_values, model_values_date = predict(PREDICTION_DAYS, COMPANY, scaler, model)
+
+    # Plot stock prices
+    plot_stocks(values_till_now, predicted_values, model_values_date, COMPANY, PREDICTION_DAYS)
 
 if __name__ == '__main__':
     run_program()
